@@ -1,0 +1,104 @@
+Merge "../meshes/cubeSplit8.msh";
+
+// ffmpeg -framerate 2.5 -i sol_%d.png -r 25 HABC2D.mpg
+
+step = 50;
+minI = 0;
+//maxI = 50; //50
+maxI = 0;
+maxRec = 2;
+targError = -1;
+
+General.Clip0A = 0;
+General.Clip0B = 0;
+General.Clip0C = -1;
+General.Clip0D = 0;
+General.ClipOnlyDrawIntersectingVolume = 0;
+General.ClipOnlyVolume = 0;
+General.ClipWholeElements = 0;
+
+Plugin(CutPlane).View = 0;
+Plugin(CutPlane).ExtractVolume = 0;
+Plugin(CutPlane).RecurLevel = 3;
+Plugin(CutPlane).TargetError = -1;
+
+Geometry.Points = 0;
+Mesh.SurfaceFaces = 0;
+Mesh.SurfaceEdges = 0;
+Mesh.VolumeEdges = 0;
+Mesh.VolumeFaces = 0;
+
+General.Light0X = -.25;
+General.Light0Y = .25;
+General.Light0Z = 1.0;
+
+General.Trackball = 0;
+General.RotationX = -80;
+General.RotationY = 0;
+General.RotationZ = 15;
+
+For p In {minI:maxI}
+
+//  Merge Sprintf("../output/sol4_field0_%g.msh", p*step);
+  Merge Sprintf("../meshes/p.msh");
+  View[0].AdaptVisualizationGrid = 1;
+  View[0].MaxRecursionLevel = maxRec;
+  View[0].TargetError = targError;
+  View[0].Clip = 1;
+  View[0].IntervalsType = 1;
+  View[0].ShowTime = 0;
+  View[0].ShowScale = 0;
+
+  minVal = -.01; //View[0].Min;
+  maxVal = .02;  //View[0].Max;
+  myTime = View[0].Time;
+
+  Plugin(CutPlane).A = 1;
+  Plugin(CutPlane).B = 0;
+  Plugin(CutPlane).C = 0;
+  Plugin(CutPlane).D = 0;
+  Plugin(CutPlane).Run;
+  View[1].ShowTime = 0;
+  View[1].ShowScale = 0;
+  View[1].IntervalsType = 3;
+  View[1].RangeType = 2;
+  View[1].SaturateValues = 1;
+  View[1].CustomMin = minVal;
+  View[1].CustomMax = maxVal;
+
+  Plugin(CutPlane).A = 0;
+  Plugin(CutPlane).B = 1;
+  Plugin(CutPlane).C = 0;
+  Plugin(CutPlane).D = 0;
+  Plugin(CutPlane).Run;
+  View[2].ShowTime = 0;
+  View[2].ShowScale = 0;
+  View[2].IntervalsType = 3;
+  View[2].RangeType = 2;
+  View[2].SaturateValues = 1;
+  View[2].CustomMin = minVal;
+  View[2].CustomMax = maxVal;
+
+  Plugin(CutPlane).A = 0;
+  Plugin(CutPlane).B = 0;
+  Plugin(CutPlane).C = 1;
+  Plugin(CutPlane).D = 0;
+  Plugin(CutPlane).Run;
+  View[3].ShowScale = 1;
+  View[3].ShowTime = 0;
+  View[3].Name = "pressure";
+  View[3].IntervalsType = 3;
+  View[3].RangeType = 2;
+  View[3].SaturateValues = 1;
+  View[3].CustomMin = minVal;
+  View[3].CustomMax = maxVal;
+
+  Delete View[0];
+  Print Sprintf("pplane%g.png",p);
+//  Delete View[0];
+//  Delete View[0];
+//  Delete View[0];
+
+EndFor
+
+

@@ -1,0 +1,44 @@
+// mogrify -crop +1000+0 +repage test.png
+// mogrify -crop -1000+0 +repage test.png
+
+Merge "../meshes/cube6.msh";
+
+General.Clip0A = 0;
+General.Clip0B = 0;
+General.Clip0C = -1;
+General.Clip0D = -.2;
+General.ClipOnlyDrawIntersectingVolume = 0;
+General.ClipOnlyVolume = 0;
+General.ClipWholeElements = 1;
+General.RotationX = 280;
+General.RotationY = 1;
+General.RotationZ = 130;
+
+General.Trackball = 0;
+General.Axes = 0;
+General.SmallAxes = 0;
+
+Geometry.Points = 0;
+Mesh.SurfaceFaces = 0;
+Mesh.SurfaceEdges = 0;
+Mesh.Clip=1;
+
+For p In {1}//{0:10}
+
+  Merge Sprintf("p%g.msh", p);
+  View[0].AdaptVisualizationGrid = 1;
+  View[0].MaxRecursionLevel = 3;
+  View[0].TargetError = -1;
+  View[0].IntervalsType = 1;
+  View[0].ShowTime = 0;
+  View[0].ShowScale = 0;
+  View[0].ColormapAlpha = .45;
+  View[0].RangeType = 2; // custom
+  View[0].CustomMax = .015;
+  View[0].CustomMin = -.015;
+
+  Print Sprintf("p%g.png", p);
+  Delete View[0];
+EndFor
+
+
